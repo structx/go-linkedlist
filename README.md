@@ -36,4 +36,15 @@ cpu: 13th Gen Intel(R) Core(TM) i5-1340P
 BenchmarkInsert-16    	 6866752	       152.2 ns/op	      64 B/op	       2 allocs/op
 PASS
 ok  	github.com/structx/lily	1.239s
+
+
+goos: linux
+goarch: amd64
+pkg: github.com/structx/lili
+cpu: 13th Gen Intel(R) Core(TM) i5-1340P
+=== RUN   BenchmarkDoubleLinkedListInsert
+BenchmarkDoubleLinkedListInsert
+BenchmarkDoubleLinkedListInsert-16         48422            160576 ns/op              64 B/op          2 allocs/op
+PASS
+ok      github.com/structx/lili 8.038s
 ```

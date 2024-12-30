@@ -1,4 +1,4 @@
-package lily
+package lili
 
 import "errors"
 

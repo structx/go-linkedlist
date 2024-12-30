@@ -1,21 +1,21 @@
-package lily_test
+package lili_test
 
 import (
 	"testing"
 
-	"github.com/structx/lily"
+	"github.com/structx/lili"
 )
 
 var (
-	ll *lily.LinkedList[int]
+	bll *lili.LinkedList[int]
 )
 
 func init() {
-	ll = lily.NewLinkedListInt()
+	bll = lili.NewLinkedListInt()
 }
 
 func BenchmarkInsert(b *testing.B) {
 	for i := 0; i < b.N; i++ {
-		ll.Insert(i, []byte("helloworld"))
+		bll.Insert(i, []byte("helloworld"))
 	}
 }
