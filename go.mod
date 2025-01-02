@@ -1,4 +1,4 @@
-module github.com/structx/lily
+module github.com/structx/lili
 
 go 1.22.5
 

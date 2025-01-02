@@ -1,19 +1,19 @@
-package lily
+package lili
 
 import (
 	"sync/atomic"
 	"unsafe"
 )
 
-type node[T comparable] struct {
-	key     T
+type node[K comparable] struct {
+	key     K
 	payload []byte
-	next    *node[T]
+	next    *node[K]
 }
 
 // LinkedList generic linked list with comparable types
-type LinkedList[T comparable] struct {
-	root *node[T]
+type LinkedList[K comparable] struct {
+	root *node[K]
 	size atomic.Uintptr
 }
 
@@ -42,22 +42,29 @@ func NewLinkedListString() *LinkedList[string] {
 }
 
 // Iterator
-type Iterator[T comparable] struct {
-	node *node[T]
+type Iterator[K comparable] struct {
+	node *node[K]
+}
+
+// Iterator
+func (ll *LinkedList[K]) Iterator() *Iterator[K] {
+	return &Iterator[K]{
+		node: ll.root,
+	}
 }
 
 // Insert new node into list
-func (ll *LinkedList[T]) Insert(key T, payload []byte) {
+func (ll *LinkedList[K]) Insert(key K, payload []byte) {
 
-	nn := &node[T]{
+	nn := &node[K]{
 		key:     key,
 		payload: payload,
 		next:    nil,
 	}
+	s := unsafe.Sizeof(nn.payload)
 
 	if ll.root == nil {
 		ll.root = nn
-		s := unsafe.Sizeof(nn.payload)
 		ll.size.Store(s)
 		return
 	}
@@ -71,12 +78,11 @@ func (ll *LinkedList[T]) Insert(key T, payload []byte) {
 	}
 
 	n.next = nn
-	s := unsafe.Sizeof(nn.payload)
 	ll.size.Add(s)
 }
 
 // Search list for key and return payload
-func (ll *LinkedList[T]) Search(key T) ([]byte, error) {
+func (ll *LinkedList[K]) Search(key K) (any, error) {
 
 	if ll.root == nil {
 		return nil, ErrNilRoot
@@ -94,28 +100,24 @@ func (ll *LinkedList[T]) Search(key T) ([]byte, error) {
 }
 
 // Flush nil root and reset size
-func (ll *LinkedList[T]) Flush() {
+func (ll *LinkedList[K]) Flush() {
 	ll.root = nil
 	ll.size.Store(0)
 }
 
 // Size returns size of list
-func (ll *LinkedList[T]) Size() uintptr {
+func (ll *LinkedList[K]) Size() uintptr {
 	return ll.size.Load()
 }
 
 // HasNext returns conditional if more nodes
-func (it *Iterator[T]) HasNext() bool {
+func (it *Iterator[K]) HasNext() bool {
 	return it.node != nil || it.node.next != nil
 }
 
 // Next returns next node payload
-func (it *Iterator[T]) Next() []byte {
+func (it *Iterator[K]) Next() any {
 	p := it.node.payload
 	it.node = it.node.next
 	return p
-}
-
-func equal[T comparable](a, b T) bool {
-	return a == b
 }
