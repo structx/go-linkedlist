@@ -28,14 +28,14 @@ func (suite *LinkedListSuite) TestSearch() {
 
 	assert := suite.Assert()
 
-	suite.ll.Insert(1, []byte("helloworld"))
+	suite.ll.Insert(99, []byte("helloworld"))
 
-	value, err := suite.ll.Search(1)
+	value, err := suite.ll.Search(99)
 	assert.NoError(err)
 
-	assert.Equal("helloworld", string(value.(string)))
+	assert.Equal("helloworld", string(value.([]byte)))
 
-	_, err = suite.ll.Search(2)
+	_, err = suite.ll.Search(101)
 	assert.Equal(lili.ErrNotFound, err)
 }
 
