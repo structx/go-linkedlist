@@ -1,17 +1,17 @@
-package lili_test
+package linkedlist_test
 
 import (
 	"testing"
 
-	"github.com/structx/lili"
+	"github.com/structx/go-linkedlist"
 )
 
 var (
-	dll *lili.DoubleLinkedList[int]
+	dll *linkedlist.DoubleLinkedList[int, []byte]
 )
 
 func init() {
-	dll = lili.NewDoubleLinkedListInt()
+	dll = &linkedlist.DoubleLinkedList[int, []byte]{}
 }
 
 func BenchmarkDoubleLinkedListInsert(b *testing.B) {

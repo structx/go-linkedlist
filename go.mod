@@ -1,4 +1,4 @@
-module github.com/structx/lili
+module github.com/structx/go-linkedlist
 
 go 1.22.5
 

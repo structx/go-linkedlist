@@ -1,19 +1,19 @@
-package lili_test
+package linkedlist_test
 
 import (
 	"testing"
 
 	"github.com/stretchr/testify/suite"
-	"github.com/structx/lili"
+	"github.com/structx/go-linkedlist"
 )
 
 type LinkedListSuite struct {
 	suite.Suite
-	ll *lili.LinkedList[int]
+	ll *linkedlist.LinkedList[int, []byte]
 }
 
 func (suite *LinkedListSuite) SetupSuite() {
-	suite.ll = lili.NewLinkedListInt()
+	suite.ll = &linkedlist.LinkedList[int, []byte]{}
 }
 
 func (suite *LinkedListSuite) TestInsert() {
@@ -36,7 +36,7 @@ func (suite *LinkedListSuite) TestSearch() {
 	assert.Equal("helloworld", string(value.([]byte)))
 
 	_, err = suite.ll.Search(101)
-	assert.Equal(lili.ErrNotFound, err)
+	assert.Equal(linkedlist.ErrNotFound, err)
 }
 
 func (suite *LinkedListSuite) TestFlush() {

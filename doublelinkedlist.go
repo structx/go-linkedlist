@@ -1,46 +1,43 @@
-package lili
+package linkedlist
 
 import (
 	"sync/atomic"
 	"unsafe"
 )
 
-type dnode[K comparable] struct {
+func zeroGN[T any]() T {
+	var t T
+	return t
+}
+
+// DNode
+type DNode[K comparable, T any] struct {
 	key      K
-	payload  []byte
-	next     *dnode[K]
-	previous *dnode[K]
+	payload  T
+	next     *DNode[K, T]
+	previous *DNode[K, T]
 }
 
 // DoubleLinkedList
-type DoubleLinkedList[K comparable] struct {
-	head *dnode[K]
+type DoubleLinkedList[K comparable, T any] struct {
+	head *DNode[K, T]
 	size atomic.Uintptr
 }
 
-// NewDoubleLinkedListInt
-func NewDoubleLinkedListInt() *DoubleLinkedList[int] {
-	return &DoubleLinkedList[int]{
-		head: nil,
-		size: atomic.Uintptr{},
-	}
-}
-
 // Insert
-func (dll *DoubleLinkedList[K]) Insert(key K, payload []byte) {
+func (dll *DoubleLinkedList[K, T]) Insert(key K, payload T) *DNode[K, T] {
+	defer dll.size.Add(unsafe.Sizeof(payload))
 
-	nn := &dnode[K]{
+	nn := &DNode[K, T]{
 		key:      key,
 		payload:  payload,
 		next:     nil,
 		previous: nil,
 	}
-	s := unsafe.Sizeof(payload)
 
 	if dll.head == nil {
 		dll.head = nn
-		dll.size.Store(s)
-		return
+		return nn
 	}
 
 	n := dll.head
@@ -52,7 +49,7 @@ func (dll *DoubleLinkedList[K]) Insert(key K, payload []byte) {
 			// update size
 			n.payload = payload
 
-			return
+			return nn
 		}
 
 		if n.next == nil {
@@ -64,14 +61,14 @@ func (dll *DoubleLinkedList[K]) Insert(key K, payload []byte) {
 	n.next = nn
 	nn.previous = n
 
-	dll.size.Add(s)
+	return nn
 }
 
 // Search
-func (dll *DoubleLinkedList[K]) Search(key K) ([]byte, error) {
+func (dll *DoubleLinkedList[K, T]) Search(key K) (T, error) {
 
 	if dll.head == nil {
-		return nil, ErrNilRoot
+		return zeroGN[T](), ErrNilRoot
 	}
 
 	n := dll.head
@@ -88,16 +85,16 @@ func (dll *DoubleLinkedList[K]) Search(key K) ([]byte, error) {
 		n = n.next
 	}
 
-	return nil, ErrNotFound
+	return zeroGN[T](), ErrNotFound
 }
 
 // Flush
-func (dll *DoubleLinkedList[K]) Flush() {
+func (dll *DoubleLinkedList[K, T]) Flush() {
 	dll.head = nil
 	dll.size.Store(0)
 }
 
 // Size
-func (dll *DoubleLinkedList[K]) Size() uintptr {
+func (dll *DoubleLinkedList[K, T]) Size() uintptr {
 	return dll.size.Load()
 }
