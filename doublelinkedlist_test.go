@@ -1,19 +1,19 @@
-package lili_test
+package linkedlist_test
 
 import (
 	"testing"
 
 	"github.com/stretchr/testify/suite"
-	"github.com/structx/lili"
+	"github.com/structx/go-linkedlist"
 )
 
 type DoubleLinkedListSuite struct {
 	suite.Suite
-	dll *lili.DoubleLinkedList[int]
+	dll *linkedlist.DoubleLinkedList[int, []byte]
 }
 
 func (suite *DoubleLinkedListSuite) SetupSuite() {
-	suite.dll = lili.NewDoubleLinkedListInt()
+	suite.dll = &linkedlist.DoubleLinkedList[int, []byte]{}
 }
 
 func (suite *DoubleLinkedListSuite) TestInsert() {
@@ -35,7 +35,7 @@ func (suite *DoubleLinkedListSuite) TestSearch() {
 	assert.Equal("helloworld", string(value))
 
 	_, err = suite.dll.Search(99)
-	assert.Equal(lili.ErrNotFound, err)
+	assert.Equal(linkedlist.ErrNotFound, err)
 }
 
 func (suite *DoubleLinkedListSuite) TestFlush() {
